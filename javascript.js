@@ -25,6 +25,15 @@ function Book(title, author, pages, isRead, id) {
     myLibrary.push(newBook);
   }
 
+function removeBookFromLibrary(bookId){
+  myLibrary.splice(myLibrary.findIndex(book => book.id === bookId),1);
+    displayBooks();
+  }
+
+Book.prototype.toggleRead = function(){
+  this.isRead = !this.isRead;
+}
+
 function displayBooks(){
   const library = document.querySelector('.library');
   library.innerHTML = '';
@@ -39,7 +48,22 @@ function displayBooks(){
       <p><strong>Pages:</strong> ${book.pages}</p>
       <p><strong>Status:</strong> ${book.isRead ? 'Read' : 'Not read yet'}</p>
     `;
+    
+    const readBtn = document.createElement('button');
+    readBtn.textContent = "Read/Unread";
+    readBtn.addEventListener('click', () => {
+      book.toggleRead();
+      displayBooks();
+    });
+    bookCard.appendChild(readBtn);
 
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete Book";
+    deleteBtn.addEventListener('click', () => {
+    removeBookFromLibrary(book.id);
+    });
+
+    bookCard.appendChild(deleteBtn);
     library.appendChild(bookCard);
   });
 }
@@ -68,8 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener("submit", (event) => {
   event.preventDefault(); 
-    
-
+  addBookToLibrary();
+  displayBooks();
+  form.reset();
+  dialog.close();
   });
 
   
